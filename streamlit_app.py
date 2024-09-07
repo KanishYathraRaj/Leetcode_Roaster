@@ -125,7 +125,7 @@ def store_user_data(username, userdata):
         'profile_data': userdata,
         'timestamp' : current_time
     })
-    st.success(f"Data for user {username} has been stored in Firestore.")
+    st.success(f"Be ready to get roasted {username}...")
 
 
 # Streamlit app function
