@@ -141,7 +141,7 @@ def main():
     # Create the LLM object
     llm = ChatGroq(
         model="llama-3.1-70b-versatile",
-        temperature=0.5,
+        temperature=1,
         max_tokens=None,
         timeout=None,
         max_retries=2,
