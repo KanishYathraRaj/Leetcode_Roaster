@@ -6,6 +6,7 @@ import os
 from langchain_groq import ChatGroq
 import base64
 import json
+import datetime
 
 # Function to get the profile data from LeetCode
 def get_profile_data(username):
@@ -117,10 +118,12 @@ def initialize_firebase():
 # Function to store user input data to Firestore
 def store_user_data(username, userdata):
     db = initialize_firebase()
+    current_time = datetime.datetime.now()
     doc_ref = db.collection('leetcode_users').document(username)
     doc_ref.set({
         'username': username,
-        'profile_data': userdata
+        'profile_data': userdata,
+        'timestamp' : current_time
     })
     st.success(f"Data for user {username} has been stored in Firestore.")
 
