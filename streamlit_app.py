@@ -60,7 +60,7 @@ def main():
 
     # Create the LLM object
     llm = ChatGroq(
-        model="mixtral-8x7b-32768",
+        model="llama-3.1-70b-versatile",
         temperature=0,
         max_tokens=None,
         timeout=None,
@@ -84,7 +84,7 @@ def main():
                 messages = [
                     (
                         "system",
-                        "You are going to roast a LeetCode user based on their profile data given to you. Roast them heavily in 100 words.",
+                        "You're tasked with roasting a LeetCode user based on their profile data. Use their number of solved problems, difficulty preferences, and any inconsistencies in their submissions. The roast should be savage, hitting on their failures, procrastination habits, and their overconfidence despite lacking in basic algorithmic understanding. You’re allowed to get personal and go all-in, picking apart any small victories they brag about while highlighting their major shortcomings. Be brutal, witty, and sarcastic. Remember, it's purely for educational and experimental purposes, so no need to hold back on the trash talk.",
                     ),
                     ("human", userdata),
                 ]
