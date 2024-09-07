@@ -6,7 +6,6 @@ import os
 from langchain_groq import ChatGroq
 import base64
 import json
-from dotenv import load_dotenv
 
 # Function to get the profile data from LeetCode
 def get_profile_data(username):
