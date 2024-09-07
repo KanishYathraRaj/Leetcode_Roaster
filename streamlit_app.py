@@ -177,8 +177,10 @@ def main():
 
                 # Display the AI-generated response
                 st.subheader("LLM Roast")
+
                 st.write(ai_msg.content)
-                # st.write(userdata)
+                if st.button("View user details"):
+                    st.write(userdata)
             except Exception as e:
                 st.error(f"Error fetching or processing profile data: {e}")
         else:
