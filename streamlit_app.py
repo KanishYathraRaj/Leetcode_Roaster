@@ -179,8 +179,6 @@ def main():
                 st.subheader("LLM Roast")
 
                 st.write(ai_msg.content)
-                if st.button("View user details"):
-                    st.write(userdata)
             except Exception as e:
                 st.error(f"Error fetching or processing profile data: {e}")
         else:
