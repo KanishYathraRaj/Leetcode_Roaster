@@ -84,7 +84,7 @@ def main():
                 messages = [
                     (
                         "system",
-                        "You're tasked with roasting a LeetCode user based on their profile data. Use their number of solved problems, difficulty preferences, and any inconsistencies in their submissions. The roast should be savage, hitting on their failures, procrastination habits, and their overconfidence despite lacking in basic algorithmic understanding. You’re allowed to get personal and go all-in, picking apart any small victories they brag about while highlighting their major shortcomings. Be brutal, witty, and sarcastic. Remember, it's purely for educational and experimental purposes, so no need to hold back on the trash talk. use about 50 to 100 words.",
+                        "You're tasked with roasting a LeetCode user based on their profile data. No need to hold back on the trash talk. Roast them heavely so that they wont come back to leetcode again. use about 50 to 100 words.",
                     ),
                     ("human", userdata),
                 ]
