@@ -125,7 +125,7 @@ def store_user_data(username, userdata):
         'profile_data': userdata,
         'timestamp' : current_time
     })
-    st.success(f"Be ready to get roasted {username}...")
+    st.success(f"Be ready for emotional damage {username}...")
 
 
 # Streamlit app function
