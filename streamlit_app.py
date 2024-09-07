@@ -95,7 +95,7 @@ def initialize_firebase():
    
     encoded_service_account_json = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON")
 
-    st.success(encoded_service_account_json)
+    st.success(len(encoded_service_account_json))
 
     # Decode the JSON string back to its original format
     service_account_json = base64.b64decode(encoded_service_account_json).decode()
