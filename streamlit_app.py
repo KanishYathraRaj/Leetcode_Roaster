@@ -1,8 +1,12 @@
+import firebase_admin
+from firebase_admin import credentials, firestore
+from leetcode_scraper import LeetcodeScraper
 import streamlit as st
 import os
 from langchain_groq import ChatGroq
-from leetcode_scraper import LeetcodeScraper
-import pandas as pd
+import base64
+import json
+from dotenv import load_dotenv
 
 # Function to get the profile data from LeetCode
 def get_profile_data(username):
@@ -87,6 +91,41 @@ def format_userdata(profile_data):
 
     return userdata
 
+def initialize_firebase():
+   
+    encoded_service_account_json = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON")
+
+    # Decode the JSON string back to its original format
+    service_account_json = base64.b64decode(encoded_service_account_json).decode()
+
+    # Load the JSON string as a dictionary
+    service_account_info = json.loads(service_account_json)
+
+    # Initialize Firebase Admin SDK
+    cred = credentials.Certificate(service_account_info)
+    
+    # Initialize the Firebase app
+    try:
+        firebase_admin.initialize_app(cred)
+    except ValueError:
+        # If the app is already initialized, we'll just use it
+        pass
+    
+    # Initialize Firestore
+    db = firestore.client()
+    return db
+
+# Function to store user input data to Firestore
+def store_user_data(username, userdata):
+    db = initialize_firebase()
+    doc_ref = db.collection('leetcode_users').document(username)
+    doc_ref.set({
+        'username': username,
+        'profile_data': userdata
+    })
+    st.success(f"Data for user {username} has been stored in Firestore.")
+
+
 # Streamlit app function
 def main():
     st.title("LeetCode Roaster")
@@ -118,6 +157,9 @@ def main():
 
                 # Format profile data for LLM
                 userdata = format_userdata(profile_data)
+
+                # Store the user input data in Firestore
+                store_user_data(username, userdata)
 
                 # Prepare messages for LLM
                 messages = [
