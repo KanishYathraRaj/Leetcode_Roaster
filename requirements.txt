@@ -2,7 +2,3 @@ streamlit
 langchain-groq
 pandas
 firebase_admin
-base64
-json
-dotenv
-os
