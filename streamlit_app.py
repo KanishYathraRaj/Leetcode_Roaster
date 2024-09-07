@@ -13,44 +13,83 @@ def get_profile_data(username):
 
 # Function to format profile data for the LLM prompt
 def format_userdata(profile_data):
-    username = profile_data['userPublicProfile']['matchedUser']['username']
-    rank_in_problem_count = profile_data['userPublicProfile']['matchedUser']['profile']['ranking']
-    aboutMe = profile_data['userPublicProfile']['matchedUser']['profile']['aboutMe']
+    # Initialize all variables with default values
+    username = "N/A"
+    rank_in_problem_count = "N/A"
+    aboutMe = "N/A"
+    activeYears = "N/A"
+    streak = "N/A"
+    totalActiveDays = "N/A"
+    total_solved_problems = "N/A"
+    total_solved_problems_easy = "N/A"
+    total_solved_problems_medium = "N/A"
+    total_solved_problems_hard = "N/A"
+    attendedContestsCount = "N/A"
+    rating = "N/A"
+    global_ranking = "N/A"
 
-    activeYears = profile_data['userProfileCalendar']['matchedUser']['userCalendar']['activeYears']
-    streak = profile_data['userProfileCalendar']['matchedUser']['userCalendar']['streak']
-    totalActiveDays = profile_data['userProfileCalendar']['matchedUser']['userCalendar']['totalActiveDays']
+    # Check for userPublicProfile and nested matchedUser keys
+    if 'userPublicProfile' in profile_data and profile_data['userPublicProfile'] is not None:
+        matched_user = profile_data['userPublicProfile'].get('matchedUser', {})
+        if matched_user:
+            username = matched_user.get('username', 'N/A')
+            profile = matched_user.get('profile', {})
+            if profile:
+                rank_in_problem_count = profile.get('ranking', 'N/A')
+                aboutMe = profile.get('aboutMe', 'N/A')
 
-    total_solved_problems = profile_data['userProblemsSolved']['matchedUser']['submitStatsGlobal']['acSubmissionNum'][0]['count']
-    total_solved_problems_easy = profile_data['userProblemsSolved']['matchedUser']['submitStatsGlobal']['acSubmissionNum'][1]['count']
-    total_solved_problems_medium = profile_data['userProblemsSolved']['matchedUser']['submitStatsGlobal']['acSubmissionNum'][2]['count']
-    total_solved_problems_hard = profile_data['userProblemsSolved']['matchedUser']['submitStatsGlobal']['acSubmissionNum'][3]['count']
+    # Check for userProfileCalendar and nested matchedUser keys
+    if 'userProfileCalendar' in profile_data and profile_data['userProfileCalendar'] is not None:
+        matched_user_calendar = profile_data['userProfileCalendar'].get('matchedUser', {})
+        if matched_user_calendar:
+            user_calendar = matched_user_calendar.get('userCalendar', {})
+            if user_calendar:
+                activeYears = user_calendar.get('activeYears', 'N/A')
+                streak = user_calendar.get('streak', 'N/A')
+                totalActiveDays = user_calendar.get('totalActiveDays', 'N/A')
 
-    attendedContestsCount = profile_data['userContestRankingInfo']['userContestRanking']['attendedContestsCount']
-    rating = profile_data['userContestRankingInfo']['userContestRanking']['rating']
-    rating = round(rating)
-    global_ranking = profile_data['userContestRankingInfo']['userContestRanking']['globalRanking']
+    # Check for userProblemsSolved and nested matchedUser keys
+    if 'userProblemsSolved' in profile_data and profile_data['userProblemsSolved'] is not None:
+        matched_user_solved = profile_data['userProblemsSolved'].get('matchedUser', {})
+        if matched_user_solved:
+            submit_stats = matched_user_solved.get('submitStatsGlobal', {}).get('acSubmissionNum', [])
+            if submit_stats:
+                total_solved_problems = submit_stats[0].get('count', 'N/A') if len(submit_stats) > 0 else 'N/A'
+                total_solved_problems_easy = submit_stats[1].get('count', 'N/A') if len(submit_stats) > 1 else 'N/A'
+                total_solved_problems_medium = submit_stats[2].get('count', 'N/A') if len(submit_stats) > 2 else 'N/A'
+                total_solved_problems_hard = submit_stats[3].get('count', 'N/A') if len(submit_stats) > 3 else 'N/A'
 
+    # Check for userContestRankingInfo and nested userContestRanking keys
+    if 'userContestRankingInfo' in profile_data and profile_data['userContestRankingInfo'] is not None:
+        contest_ranking = profile_data['userContestRankingInfo'].get('userContestRanking', {})
+        if contest_ranking:
+            attendedContestsCount = contest_ranking.get('attendedContestsCount', 'N/A')
+            rating = contest_ranking.get('rating', 'N/A')
+            if rating != 'N/A' and rating is not None:
+                rating = round(rating)
+            global_ranking = contest_ranking.get('globalRanking', 'N/A')
+
+    # Formatted user data for the LLM prompt
     userdata = f"""
-    The username : {username}
-    Total problem solved {total_solved_problems}
-    No of easy problem solved : {total_solved_problems_easy}
-    No of medium problem solved : {total_solved_problems_medium}
-    no of hard problem solved : {total_solved_problems_hard}
-    activeYears : {activeYears}
-    longest streak : {streak} days
-    total active days : {totalActiveDays} days
-    no of contest attended : {attendedContestsCount}
-    contest rating : {rating}
-    global ranking in contest : {global_ranking}
-    global ranking in problem count : {rank_in_problem_count}
+    The username : {username} \n
+    Total problem solved : {total_solved_problems} \n
+    No of easy problems solved : {total_solved_problems_easy} \n
+    No of medium problems solved : {total_solved_problems_medium} \n
+    No of hard problems solved : {total_solved_problems_hard}
+    Active years : {activeYears} \n
+    Longest streak : {streak} days \n
+    Total active days : {totalActiveDays} days \n
+    No of contests attended : {attendedContestsCount} \n
+    Contest rating : {rating} \n
+    Global ranking in contest : {global_ranking} \n
+    Global ranking in problem count : {rank_in_problem_count} \n
     """
-    
+
     return userdata
 
 # Streamlit app function
 def main():
-    st.title("LeetCode User Roaster")
+    st.title("LeetCode Roaster")
 
     # Get API key for LLM from environment variable
     api_key = os.getenv("GROQ_API_KEY")
@@ -95,6 +134,7 @@ def main():
                 # Display the AI-generated response
                 st.subheader("LLM Roast")
                 st.write(ai_msg.content)
+                # st.write(userdata)
             except Exception as e:
                 st.error(f"Error fetching or processing profile data: {e}")
         else:
