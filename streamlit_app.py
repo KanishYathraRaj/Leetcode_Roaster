@@ -130,8 +130,8 @@ def store_user_data(username, userdata):
 def store_roast_data(username, roast):
     db = initialize_firebase()
     doc_ref = db.collection('leetcode_users').document(username)
-    doc_ref.set({
-        'roast' : roast
+    doc_ref.update({
+        'roast': roast
     })
     st.success(f"Feel free to send feedback at kanish.aims@gmail.com")
 
