@@ -123,9 +123,16 @@ def store_user_data(username, userdata):
     doc_ref.set({
         'username': username,
         'profile_data': userdata,
-        'timestamp' : current_time
+        'timestamp' : current_time,
     })
     st.success(f"Be ready for emotional damage {username}...")
+
+def store_roast_data(username, roast):
+    db = initialize_firebase()
+    doc_ref = db.collection('leetcode_users').document(username)
+    doc_ref.set({
+        'roast' : roast
+    })
 
 
 # Streamlit app function
@@ -174,6 +181,9 @@ def main():
 
                 # Send to LLM and get response
                 ai_msg = llm.invoke(messages)
+
+                #store the roast data of the user
+                store_roast_data(username,ai_msg.content)
 
                 # Display the AI-generated response
                 st.subheader("LLM Roast")
