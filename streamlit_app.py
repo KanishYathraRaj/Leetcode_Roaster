@@ -134,6 +134,14 @@ def store_roast_data(username, roast):
         'roast': roast
     })
     st.success(f"Feel free to contact at kanish.aims@gmail.com for Bugs and Suggestions")
+
+def store_satisfaction_level(username, satisfaction):
+    db = initialize_firebase()
+    doc_ref = db.collection('leetcode_users').document(username)
+    doc_ref.update({
+        'satisfaction_level': satisfaction
+    })
+    st.success("Thank you for your feedback!")
     
 # Streamlit app function
 def main():
@@ -189,6 +197,12 @@ def main():
 
                 #store the roast data of the user
                 store_roast_data(username,ai_msg.content)
+
+                satisfaction = st.slider("Rate your satisfaction with this roast:", 1, 5, 3)
+                
+                # Store the satisfaction level
+                if st.button("Submit Satisfaction"):
+                    store_satisfaction_level(username, satisfaction)
 
             except Exception as e:
                 st.error(f"Error fetching or processing profile data: {e}")
