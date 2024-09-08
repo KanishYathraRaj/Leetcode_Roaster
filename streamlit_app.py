@@ -127,14 +127,21 @@ def store_user_data(username, userdata):
     })
     st.success(f"Be ready for emotional damage {username}...")
 
-def store_roast_data(username, roast , level):
+def store_roast_data(username, roast):
     db = initialize_firebase()
     doc_ref = db.collection('leetcode_users').document(username)
     doc_ref.update({
-        'roast': roast,
+        'roast': roast
+    })
+    st.success(f"Feel free to contact at kanish.aims@gmail.com for Bugs and Suggestions")
+
+def store_satisfaction_level_data(username, level):
+    db = initialize_firebase()
+    doc_ref = db.collection('leetcode_users').document(username)
+    doc_ref.update({
         'satisfaction level' : level
     })
-    st.success(f"Feel free to send feedback at kanish.aims@gmail.com")
+    st.success(f"Thank you for your feedback !!!")
 
 
 # Streamlit app function
@@ -189,10 +196,15 @@ def main():
 
                 st.write(ai_msg.content)
 
+                satisfaction_level = None
+
                 satisfaction_level = st.text_input("Your satisfaction level on 1 - 10 scale :)")
 
                 #store the roast data of the user
-                store_roast_data(username,ai_msg.content,satisfaction_level)
+                store_roast_data(username,ai_msg.content)
+
+                if satisfaction_level != None :
+                    store_satisfaction_level_data(username,satisfaction_level)
 
             except Exception as e:
                 st.error(f"Error fetching or processing profile data: {e}")
