@@ -183,13 +183,14 @@ def main():
                 # Send to LLM and get response
                 ai_msg = llm.invoke(messages)
 
-                #store the roast data of the user
-                store_roast_data(username,ai_msg.content)
-
                 # Display the AI-generated response
                 st.subheader("LLM Roast")
 
                 st.write(ai_msg.content)
+
+                #store the roast data of the user
+                store_roast_data(username,ai_msg.content)
+                
             except Exception as e:
                 st.error(f"Error fetching or processing profile data: {e}")
         else:
