@@ -196,14 +196,14 @@ def main():
 
                 st.write(ai_msg.content)
 
-                satisfaction_level = None
+                satisfaction_level = ""
 
                 satisfaction_level = st.text_input("Your satisfaction level on 1 - 10 scale :)")
 
                 #store the roast data of the user
                 store_roast_data(username,ai_msg.content)
 
-                if satisfaction_level != None :
+                if satisfaction_level != "" :
                     store_satisfaction_level_data(username,satisfaction_level)
 
             except Exception as e:
