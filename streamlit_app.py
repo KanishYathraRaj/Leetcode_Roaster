@@ -133,6 +133,7 @@ def store_roast_data(username, roast):
     doc_ref.set({
         'roast' : roast
     })
+    st.success(f"Feel free to send feedback at kanish.aims@gmail.com")
 
 
 # Streamlit app function
